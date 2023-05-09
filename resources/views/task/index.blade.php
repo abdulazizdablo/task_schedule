@@ -14,6 +14,20 @@
     </head>
 
     <body>
+        <form method="POST" action="">
+            <label for="projects">Pick your project</label>
+
+            <select name="projects" id="projects" placeholder="select">
+                <option value="" selected disabled></option>
+                @foreach ($projects as $project)
+                    <option value={{ $project->project }}>{{ $project->project }}</option>
+                @endforeach
+            </select>
+
+        </form>
+
+        <hr>
+
         <table border="black">
             <thead>
 
@@ -130,9 +144,6 @@
 
 
 
-
-
-
                     /* replaced_task.forEach(e =>replaced_task[i].textContent =  task[i].textContent )
                     replaced_task.textContent = document.querySelector('.'+task).textContent;*/
 
@@ -153,6 +164,37 @@
                                 grabed_task.splice(0, replaced_task.length, ...replaced_task);
 
                         */
+
+                })
+
+
+
+
+                $('select').on('change', function(e) {
+                    let project = e.target.value
+
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                        }
+                    });
+
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ route('associated_tasks') }}",
+
+                        data: {
+                            "project": project
+
+                        },
+
+                        success: function(data) {
+
+
+
+                        }
+
+                    })
 
                 })
             </script>

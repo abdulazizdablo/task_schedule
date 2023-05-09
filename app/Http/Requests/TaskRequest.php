@@ -22,17 +22,18 @@ class TaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-           'name' => 'required|max:30',
-           'priority' => 'required|numeric|unique:tasks,priority|max:30'
+            'name' => 'required|max:30',
+            'priority' => 'required|numeric|min:0|not_in:0|unique:tasks,priority|max:30',
+            'project' => 'required|max:30'
         ];
     }
 
 
     public function messages(): array
-{
-    return [
-        'name.required' => 'Task name is required',
-        'priority.required' => 'Task priority is required',
-    ];
-}
+    {
+        return [
+            'name.required' => 'Task name is required',
+            'priority.required' => 'Task priority is required',
+        ];
+    }
 }

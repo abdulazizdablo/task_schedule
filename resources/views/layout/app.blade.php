@@ -25,8 +25,16 @@
 
     <div>
 
-        <label for="name">Priority</label>
-        <input id="priority" name="priority" type="number">
+        <label for="priority">Priority</label>
+        <input id="priority" name="priority" type="number" min="1">
+
+
+
+    </div>
+    <div>
+
+        <label for="project">Project</label>
+        <input id="project" name="project" type="text" >
 
 
 

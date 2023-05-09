@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TaskRequest;
 use Illuminate\Http\Request;
 use App\Models\Task;
+use App\Models\Project;
 
 class TaskController extends Controller
 {
@@ -14,10 +15,9 @@ class TaskController extends Controller
     public function index()
     {
         $tasks = Task::all()->sortBy('priority');
+        $projects = Project::all();
 
-        return view('task.index')->with('tasks', $tasks);
-
-   
+        return view('task.index')->with('tasks', $tasks)->with('projects', $projects);
     }
 
     /**
@@ -33,7 +33,7 @@ class TaskController extends Controller
      */
     public function store(TaskRequest $task_request)
     {
-        Task::create([
+        $task = Task::create([
 
             'name' => $task_request->name,
             'priority' => $task_request->priority
@@ -41,6 +41,13 @@ class TaskController extends Controller
 
 
         ]);
+
+        $project = $task_request->project;
+        //$project = new Project();
+        // $project->project = $project_name;
+        var_dump($project);
+        $project_name = Project::where('project',$project)
+        $task->project()->create(['project' => $project,'tasks'=>$task->name]);
         return redirect()->route('task.index');
     }
 
@@ -57,7 +64,7 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-        return view('task.edit')->with('task',$task);
+        return view('task.edit')->with('task', $task);
     }
 
     /**
@@ -76,7 +83,6 @@ class TaskController extends Controller
         ]);
 
         return redirect()->route('task.index');
-
     }
 
     /**
@@ -86,37 +92,34 @@ class TaskController extends Controller
     {
         $task->delete();
         return redirect()->route('task.index');
-
     }
     public function reorder(Request $request)
     {
-        
+
 
         $new_task = request('new_task');
         $previous_task = request('previous_task');
- 
-// $task_one
+
+        // $task_one
 
 
-       $task_one = Task::where('priority', $new_task)->first();
+        $task_one = Task::where('priority', $new_task)->first();
 
-       $task_two = Task::where('priority', $previous_task)->first();
+        $task_two = Task::where('priority', $previous_task)->first();
 
 
         tap($task_one)->update(['priority' => $task_two->priority]);
-        tap($task_two)->update(['priority' => $new_task ]);
-if ($task_one && $task_two){
-
-      
-    return response()->json([
-
-        'task_one_priority' => (int)$task_one->priority,
-        'task_two_priority' => (int)$task_two->priority
-    ]);
+        tap($task_two)->update(['priority' => $new_task]);
+        if ($task_one && $task_two) {
 
 
-}
-      
+            return response()->json([
+
+                'task_one_priority' => (int)$task_one->priority,
+                'task_two_priority' => (int)$task_two->priority
+            ]);
+        }
+
         /*$task_one->update([
     'name' => $task_two->name,
     'priority' => $task_two->priority,
@@ -132,7 +135,5 @@ if ($task_one && $task_two){
 
 
         /*$reorder_tasks = json_decode();*/
-  
     }
-
 }

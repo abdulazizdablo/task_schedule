@@ -1,5 +1,5 @@
 @extends('layout.app')
-
+@include('task.create')
 @section('content')
     <!DOCTYPE html>
     <html lang="en">
@@ -14,6 +14,11 @@
     </head>
 
     <body>
+
+
+        @php
+            
+        @endphp
         <form method="POST" action="">
             <label for="projects">Pick your project</label>
 
@@ -190,7 +195,9 @@
 
                         success: function(data) {
 
-
+                            if (data.success == true) {
+                                $('html').html(data.html);
+                            }
 
                         }
 

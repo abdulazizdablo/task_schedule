@@ -1,4 +1,6 @@
-<table>
+@extends('layout.app')
+@section('content')
+<table border="black">
 <thead>
 <tr>
 
@@ -16,15 +18,16 @@
 {{$project->project}}
 
 </td>
-<td>
+
 @foreach ($project->tasks as $associated_tasks )
-    {{$associated_tasks}}
+<td> {{$associated_tasks}}   </td>
 @endforeach
     
     
-    </td>
+ 
 </tr>
 
 
 </tbody>
 </table>
+@endsection

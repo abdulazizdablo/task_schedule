@@ -14,8 +14,11 @@ return new class extends Migration
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
             $table->string('name',30);
+            $table->unsignedBigInteger('project_id');
             $table->smallInteger('priority');
             $table->timestamps();
+            //$table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
+
         });
     }
 

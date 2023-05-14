@@ -18,11 +18,11 @@
 {{$project->project}}
 
 </td>
-
+<td>
 @foreach ($project->tasks as $associated_tasks )
-<td> {{$associated_tasks}}   </td>
+<div> {{$associated_tasks}}  </div>
 @endforeach
-    
+</td>
     
  
 </tr>

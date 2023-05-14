@@ -33,135 +33,39 @@ class TaskController extends Controller
      */
     public function store(TaskRequest $task_request)
     {
-        /* $task = Task::create([
-
-            'name' => $task_request->name,
-            'priority' => $task_request->priority
-
-
-
-        ]);*/
-
-
-
-        /* $task_data = [
-
-            'name' => $task_request->name,
-            'priority' => $task_request->priority
-
-
-
-        ];*/
-        //  $task = new Task($task_data);
-
-        /*$task_data =[
-            'name' => $task_request->name,
-            'priority' => $task_request->priority
-
-
-        ];*/
-
-        // $task = new Task($task_data);
 
         $project_name = $task_request->project;
-        //$project = new Project();
-        // $project->project = $project_name;
+
         $project = Project::firstOrNew(['project' => $project_name]);
-        //$task->project_id = $project->id;
-        //  $task->save();
-        //dd($project->id);
-        /*$task = new Task();
-        $task->name = $task_request->name;
-        $task->priority = $task_request->priority;*/
+        // Check if Project with same name exists in Database
 
         if (!$project->exists) {
             $project_tasks = [$task_request->name];
             $project->tasks = $project_tasks;
             $project->save();
-            $project->tasks()->create([ /*'project' => $project_name, 'tasks' => $project_tasks*/
+            $project->tasks()->create([
                 'project_id' => $project->id,
                 'name' => $task_request->name,
                 'priority' => $task_request->priority,
             ]);
         } else {
-            //$project->tasks->push($task->name);
 
 
-            $task = Task::create([
+
+            Task::create([
                 'project_id' => $project->id,
-
                 'name' => $task_request->name,
                 'priority' => $task_request->priority
-
-
 
             ]);
 
             $project->tasks = array_merge($project->tasks, (array)$task_request->name);
-            //array_push( $p_tasks, $task->name);
-            // dd($p_tasks );
-            //$project->tasks->update( $p_tasks);
-            //$project->save();
-            // $project->save();
             $project->update([
 
                 'tasks' => $project->tasks
 
             ]);
-            //$project->tasks()->update(['project_id' => $project->id] );
-
-
-            //if($project->tasks()->exists()){
-
-            //dd($project->tasks());
-            //array_push($project->tasks,$task->name);
-
-            //$task->project()->update([ 'tasks' => $project->tasks]);
-
-
-
-
-
-            /*  $project_tasks = [$task_request->name];
-            $project->tasks = $project_tasks;
-            $project->save();
-            $project->tasks()->create([ /*'project' => $project_name, 'tasks' => $project_tasks*/
-            /* 'project_id' => $project->id,
-                'name' => $task_request->name,
-                'priority' => $task_request->priority,*/
-            /* ]);*/
         }
-
-
-        // $project = Project::where('project', $project_name)->first();
-        /*Task::find($id)->users()->save($user);*/
-        //$project_tasks = array_push($project->tasks, $project_name);
-
-
-        // $task->project()->update(['project' => $project_name, 'tasks' => $project_tasks]);
-
-        //if ($project->tasks()->exists()) {
-        /*$project = Project::updateOrCreate(
-    ['project' =>   $project_name ],
-    ['tasks' => array_merge($project_tasks, (array)$project_name)]
-
-
-   
-)*/
-
-        //$project_tasks = array_merge($project->tasks,(array) $project_name);
-
-
-        //$task->project()->update(['project' => $project_name, 'tasks' => $project_tasks]);
-        //}
-
-        //$task->project()->update(['project' => $project_name, 'tasks' => $task->name]);
-
-
-
-
-
-
 
         return redirect()->route('task.index');
     }
@@ -169,10 +73,7 @@ class TaskController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Task $task)
-    {
-        return view('task.show')->with('task', $task);
-    }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -212,8 +113,8 @@ class TaskController extends Controller
     {
 
 
-        $new_task = request('new_task');
-        $previous_task = request('previous_task');
+        $new_task = $request->input('new_task');
+        $previous_task = $request->input('previous_task');
 
         // $task_one
 
@@ -234,21 +135,5 @@ class TaskController extends Controller
                 'task_two_priority' => (int)$task_two->priority
             ]);
         }
-
-        /*$task_one->update([
-    'name' => $task_two->name,
-    'priority' => $task_two->priority,
-    'created_at' => $task_two->created_at,
-    'updated_at' => $task_two->updated_at
-
-]);
-*/
-        /*$task_two->update([
-    $task_one
-]);*/
-
-
-
-        /*$reorder_tasks = json_decode();*/
     }
 }

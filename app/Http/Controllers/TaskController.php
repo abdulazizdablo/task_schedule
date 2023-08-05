@@ -31,40 +31,34 @@ class TaskController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(TaskRequest $task_request)
+    public function store(TaskRequest $request)
     {
 
-        $project_name = $task_request->project;
 
-        $project = Project::firstOrNew(['project' => $project_name]);
+
+        $project_name = $request->project;
+
+        $project = Project::firstOrNew(['name' => $project_name]);
         // Check if Project with same name exists in Database
 
+
+        $task  = new Task();
+        $task->name = $request->name;
+        $task->priority = $request->priority;
+
+
+
         if (!$project->exists) {
-            $project_tasks = [$task_request->name];
-            $project->tasks = $project_tasks;
+
+
             $project->save();
-            $project->tasks()->create([
-                'project_id' => $project->id,
-                'name' => $task_request->name,
-                'priority' => $task_request->priority,
-            ]);
+
+            $project->tasks()->save($task);
         } else {
 
 
 
-            Task::create([
-                'project_id' => $project->id,
-                'name' => $task_request->name,
-                'priority' => $task_request->priority
-
-            ]);
-
-            $project->tasks = array_merge($project->tasks, (array)$task_request->name);
-            $project->update([
-
-                'tasks' => $project->tasks
-
-            ]);
+            $project->tasks()->save($task);
         }
 
         return redirect()->route('task.index');
@@ -86,17 +80,19 @@ class TaskController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(TaskRequest $task_request, Task $task)
+    public function update(Request $request, Task $task)
     {
+
+        $request->validate([
+            'name' => 'required|max:30',
+            'priority' => 'required|digits_between:1,6|min:0|unique:tasks,priority|max:30'
+
+        ]);
+
 
         // use Dependency Injection to Model Binding with the desired task
 
-        $task->update([
-            'name' => $task_request->name,
-            'priority' => $task_request->priority
-
-
-        ]);
+        $task->update($request->all());
 
         return redirect()->route('task.index');
     }
@@ -116,7 +112,6 @@ class TaskController extends Controller
         $new_task = $request->input('new_task');
         $previous_task = $request->input('previous_task');
 
-        // $task_one
 
 
         $task_one = Task::where('priority', $new_task)->first();
@@ -124,9 +119,26 @@ class TaskController extends Controller
         $task_two = Task::where('priority', $previous_task)->first();
 
 
+
+
+
+
         tap($task_one)->update(['priority' => $task_two->priority]);
+
+
+
+
         tap($task_two)->update(['priority' => $new_task]);
+
+
+
         if ($task_one && $task_two) {
+
+
+
+
+
+
 
 
             return response()->json([

@@ -25,7 +25,7 @@
             <select name="projects" id="projects" placeholder="select">
                 <option value="" selected disabled></option>
                 @foreach ($projects as $project)
-                    <option value={{ $project->project }}>{{ $project->project }}</option>
+                    <option value={{ $project->name }}>{{ $project->name }}</option>
                 @endforeach
             </select>
 
@@ -87,11 +87,6 @@
                     let tbody = document.querySelector('tbody')
 
 
-                    //console.log(tbody.children.findIndex(item => item === 'tr#task_Abdulaziz Dablo4'))
-                    //tbody.replaceChild(task, tbody.children[replaced_task.getAttribute("order")])
-                    //tbody.replaceChild(replaced_task, tbody.children[task.getAttribute("order")])
-                    //tbody.insertBefore(replaced_task, tbody.children[task.getAttribute("order")]);
-
 
 
 
@@ -145,30 +140,6 @@
 
                         }
                     });
-
-
-
-
-                    /* replaced_task.forEach(e =>replaced_task[i].textContent =  task[i].textContent )
-                    replaced_task.textContent = document.querySelector('.'+task).textContent;*/
-
-                    /* Array.from.replaced_task.forEach(e => replaced_task[i].innerText = task[i].innerText)
-                     temp =  replaced_task
-                     replaced_task = task
-                     task = temp*/
-
-
-                    /*console.log(event.target.parentNode)     
-
-                                
-                                [...event.target.parentNode].forEach(e => replaced_task.push(e.innerText))
-
-                                const data = event.dataTransfer.getData("array");
-                                // swap two arrays
-                                replaced_task.splice(0, grabed_task.length, ...grabed_task);
-                                grabed_task.splice(0, replaced_task.length, ...replaced_task);
-
-                        */
 
                 })
 

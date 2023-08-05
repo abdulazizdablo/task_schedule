@@ -23,7 +23,7 @@ class TaskRequest extends FormRequest
     {
         return [
             'name' => 'required|max:30',
-            'priority' => 'required|numeric|min:0|unique:tasks,priority|max:30',
+            'priority' => 'required|digits_between:1,6|min:0|unique:tasks,priority|max:30',
             'project' => 'required|max:30'
         ];
     }

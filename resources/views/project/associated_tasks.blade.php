@@ -1,33 +1,43 @@
 @extends('layout.app')
 @section('content')
-<table border="black">
-<thead>
-<tr>
+    <table border="black">
+        <thead>
+            <tr style="width: 100%">
 
-<td>Project</td>
-<td>Related Tasks</td>
-</tr>
+                <th rowspan="99">Project</th>
+                <th colspan="5">Related Tasks</th>
 
+            </tr>
+            <tr>
 
-</thead>
-
-<tbody>
-<tr>
-<td>
-
-{{$project->project}}
-
-</td>
-<td>
-@foreach ($project->tasks as $associated_tasks )
-<div> {{$associated_tasks}}  </div>
-@endforeach
-</td>
-    
- 
-</tr>
+                <th colspan="4">Name</th>
+                <th colspan="3">Priority</th>
 
 
-</tbody>
-</table>
+            </tr>
+
+        </thead>
+
+        <tbody>
+            <tr>
+                <td rowspan="99" colspan="4">
+
+                    {{ $project->name }}
+
+                </td>
+            </tr>
+            @foreach ($project->tasks as $associated_tasks)
+                <tr>
+                    <td>{{ $associated_tasks->name }}</td>
+                    <td>{{ $associated_tasks->priority }}</td>
+                </tr>
+            @endforeach
+
+
+
+            </tr>
+
+
+        </tbody>
+    </table>
 @endsection

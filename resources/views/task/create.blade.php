@@ -1,6 +1,6 @@
 <h1>Create Task</h1>
 <form method="POST" action={{route('task.store')}}>
-    @csrf
+
     <div>
 
         <label for="name">Name</label>
@@ -27,4 +27,5 @@
 
     </div>
     <input type="submit">
+        @csrf
 </form>

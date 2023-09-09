@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\TaskRequest;
+use App\Http\Requests\CreateTaskRequest;
+use App\Http\Requests\UpdateTaskRequest;
 use Illuminate\Http\Request;
 use App\Models\Task;
 use App\Models\Project;
+use App\Services\TaskReorderService;
 
 class TaskController extends Controller
 {
@@ -14,7 +16,7 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $tasks = Task::all()->sortBy('priority');
+        $tasks = Task::sortBy('priority')->all();
         $projects = Project::all();
 
         return view('task.index')->with('tasks', $tasks)->with('projects', $projects);
@@ -31,37 +33,19 @@ class TaskController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(TaskRequest $request)
+    public function store(CreateTaskRequest $request)
     {
 
-
-
-        $project_name = $request->project;
-
-        $project = Project::firstOrNew(['name' => $project_name]);
+        $project = Project::firstOrCreate(['name' => $request->project]);
         // Check if Project with same name exists in Database
-
 
         $task  = new Task();
         $task->name = $request->name;
         $task->priority = $request->priority;
 
+        $project->tasks()->save($task);
 
-
-        if (!$project->exists) {
-
-
-            $project->save();
-
-            $project->tasks()->save($task);
-        } else {
-
-
-
-            $project->tasks()->save($task);
-        }
-
-        return redirect()->route('task.index');
+        return back();
     }
 
     /**
@@ -80,21 +64,14 @@ class TaskController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Task $task)
+    public function update(UpdateTaskRequest $request, Task $task)
     {
-
-        $request->validate([
-            'name' => 'required|max:30',
-            'priority' => 'required|digits_between:1,6|min:0|unique:tasks,priority|max:30'
-
-        ]);
-
 
         // use Dependency Injection to Model Binding with the desired task
 
-        $task->update($request->all());
+        $task->update($request->validated());
 
-        return redirect()->route('task.index');
+        return back();
     }
 
     /**
@@ -102,50 +79,17 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        $task->delete();
-        return redirect()->route('task.index');
-    }
-    public function reorder(Request $request)
-    {
 
+        $task->delete();
+        return back();
+    }
+    public function reorder(Request $request, TaskReorderService $task_service)
+    {
 
         $new_task = $request->input('new_task');
         $previous_task = $request->input('previous_task');
-
-
-
-        $task_one = Task::where('priority', $new_task)->first();
-
-        $task_two = Task::where('priority', $previous_task)->first();
-
-
-
-
-
-
-        tap($task_one)->update(['priority' => $task_two->priority]);
-
-
-
-
-        tap($task_two)->update(['priority' => $new_task]);
-
-
-
-        if ($task_one && $task_two) {
-
-
-
-
-
-
-
-
-            return response()->json([
-
-                'task_one_priority' => (int)$task_one->priority,
-                'task_two_priority' => (int)$task_two->priority
-            ]);
-        }
+        
+        $task_service->tasksReorder($new_task,$previous_task);
+     
     }
 }

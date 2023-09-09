@@ -15,10 +15,6 @@
 
     <body>
 
-
-        @php
-            
-        @endphp
         <form method="POST" action="">
             <label for="projects">Pick your project</label>
 
@@ -36,11 +32,11 @@
         <table border="black">
             <thead>
 
-                <td>Name</td>
-                <td>Priority</td>
-                <td>Created_at</td>
-                <td>Updated_at</td>
-                <td>Task Operations</td>
+                <th>Name</th>
+                <th>Priority</th>
+                <th>Created_at</th>
+                <th>Updated_at</th>
+                <th>Task Operations</th>
             </thead>
             <tbody>
                 @foreach ($tasks as $task)

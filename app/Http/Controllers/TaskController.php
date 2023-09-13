@@ -16,7 +16,7 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $tasks = Task::sortBy('priority')->all();
+        $tasks = Task::orderBy('priority');
         $projects = Project::all();
 
         return view('task.index')->with('tasks', $tasks)->with('projects', $projects);

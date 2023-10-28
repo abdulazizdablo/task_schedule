@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [TaskController::class, 'index'])->name('indeks');
 
-Route::post('/associated_tasks', [ProjectController::class, 'associatedTasks'])->name('associated_tasks');
+Route::post('/associated-tasks', [ProjectController::class, 'associatedTasks'])->name('associated-tasks');
 
 Route::post('/reorder', [TaskController::class, 'reorder'])->name('reorder');
-Route::resource('task', TaskController::class);
+Route::resource('tasks', TaskController::class);

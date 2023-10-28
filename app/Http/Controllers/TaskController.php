@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateTaskRequest;
-use App\Http\Requests\UpdateTaskRequest;
-use Illuminate\Http\Request;
+use App\Http\Requests\EditTaskRequest;
+use App\Http\Requests\TaskReorderRequest;
 use App\Models\Task;
 use App\Models\Project;
-use App\Services\TaskReorderService;
+use App\Services\TaskService;
 
 class TaskController extends Controller
 {
@@ -16,10 +16,10 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $tasks = Task::orderBy('priority');
+        $tasks = Task::orderBy('priority')->get();
         $projects = Project::all();
 
-        return view('task.index')->with('tasks', $tasks)->with('projects', $projects);
+        return view('tasks.index')->with('tasks', $tasks)->with('projects', $projects);
     }
 
     /**
@@ -27,7 +27,7 @@ class TaskController extends Controller
      */
     public function create()
     {
-        return view('task.create');
+        return view('tasks.create');
     }
 
     /**
@@ -58,20 +58,20 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-        return view('task.edit')->with('task', $task);
+        return view('tasks.edit')->with('task', $task);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateTaskRequest $request, Task $task)
+    public function update(EditTaskRequest $request, Task $task)
     {
 
         // use Dependency Injection to Model Binding with the desired task
 
         $task->update($request->validated());
 
-        return back();
+        return to_route('tasks.index');
     }
 
     /**
@@ -79,17 +79,15 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-
         $task->delete();
         return back();
     }
-    public function reorder(Request $request, TaskReorderService $task_service)
-    {
 
+    public function reorder(TaskReorderRequest $request, TaskService $task_service)
+    {
         $new_task = $request->input('new_task');
         $previous_task = $request->input('previous_task');
-        
-        $task_service->tasksReorder($new_task,$previous_task);
-     
+
+        return $task_service->tasksReorder($new_task, $previous_task);
     }
 }

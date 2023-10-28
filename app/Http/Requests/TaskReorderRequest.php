@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateTaskRequest extends FormRequest
+class TaskReorderRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +22,8 @@ class UpdateTaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|unique:tasks,name|max:30',
-            'priority' => 'required|digits_between:1,6|min:0|unique:tasks,priority|max:30',
+            'new_task' => 'required|exists:tasks,priority|integer',
+            'previous_task' => 'required|exists:tasks,priority|integer',
         ];
     }
 }

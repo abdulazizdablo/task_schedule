@@ -1,5 +1,5 @@
 <h1>Create Task</h1>
-<form method="POST" action={{route('task.store')}}>
+<form method="POST" action={{route('tasks.store')}}>
 
     <div>
 

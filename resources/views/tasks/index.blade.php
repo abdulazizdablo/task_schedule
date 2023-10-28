@@ -1,5 +1,5 @@
 @extends('layout.app')
-@include('task.create')
+@include('tasks.create')
 @section('content')
     <!DOCTYPE html>
     <html lang="en">
@@ -14,7 +14,9 @@
     </head>
 
     <body>
-
+@foreach($errors->all() as $error)
+{{$error}}
+@endforeach
         <form method="POST" action="">
             <label for="projects">Pick your project</label>
 
@@ -46,8 +48,8 @@
                         <td value={{ $task->priority }}>{{ $task->priority }}</td>
                         <td>{{ $task->created_at }}</td>
                         <td>{{ $task->updated_at }}</td>
-                        <td><a href={{ route('task.edit', $task) }}><button> Edit</button></a>
-                            <form method="POST" action={{ route('task.destroy', $task) }}>
+                        <td><a href={{ route('tasks.edit', $task) }}><button> Edit</button></a>
+                            <form method="POST" action={{ route('tasks.destroy', $task) }}>
                                 @csrf
                                 @method('DELETE')
                                 <input type="submit" value="Delete">
@@ -82,10 +84,6 @@
                     let replaced_task = event.target.parentNode
                     let tbody = document.querySelector('tbody')
 
-
-
-
-
                     if (event.target.nodeName == 'TD')
                         var temp = []
                     var new_task
@@ -105,7 +103,7 @@
 
                     }
 
-                    console.log(new_task)
+                
                     event.preventDefault();
                     $.ajaxSetup({
                         headers: {
@@ -153,7 +151,7 @@
 
                     $.ajax({
                         type: "POST",
-                        url: "{{ route('associated_tasks') }}",
+                        url: "{{ route('associated-tasks') }}",
 
                         data: {
                             "project": project

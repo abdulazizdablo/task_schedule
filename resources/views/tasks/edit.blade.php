@@ -36,7 +36,7 @@
 
 
 
-        <form method="POST" action={{ route('task.update', $task->id) }}>
+        <form method="POST" action={{ route('tasks.update', $task->id) }}>
             @csrf
             @method('PUT')
 
